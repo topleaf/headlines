@@ -1,11 +1,20 @@
-from flask import Flask
+from flask import Flask, render_template,url_for
 import feedparser
 
 app = Flask(__name__)
+# https://rss.com/blog/popular-rss-feeds/
+
 RSS_FEEDS = dict(bbc='http://feeds.bbci.co.uk/news/rss.xml',
+                 bbcasia='http://feeds.bbci.co.uk/news/world/asia/rss.xml',
+                 nytimes='https://rss.nytimes.com/services/xml/rss/nyt/AsiaPacific.xml',
                  cnn='http://rss.cnn.com/rss/edition.rss',
                  fox='http://feeds.foxnews.com/foxnews/latest',
-                 iol='http://www.iol.co.za/cmlink/1.640')
+                 latimesworld='https://www.latimes.com/world/rss2.0.xml',
+                 iol='http://www.iol.co.za/cmlink/1.640',
+                 dwworld='http://rss.dw.com/rdf/rss-en-world',
+                 dwasia='http://rss.dw.com/rdf/rss-en-asia',
+                 dwscience='http://rss.dw.com/xml/rss_en_science',
+                 dwculture='http://rss.dw.com/rdf/rss-en-cul')
 # BBC_FEED = 'https://feeds.bbci.co.uk/news/rss.xml'
 
 @app.route('/')
@@ -27,16 +36,27 @@ RSS_FEEDS = dict(bbc='http://feeds.bbci.co.uk/news/rss.xml',
 
 def get_news(source='bbc'):
     feed = feedparser.parse(RSS_FEEDS[source])
-    first_article = feed['entries'][0]
-    return """<html>
-      <body>
-        <h1>  Headlines </h1>
-        <b> {0} </b> <br/>
-        <i> {1} </i> <br/>
-        <p> {2} </p> <br/>
-      </body>
-    </html>
-    """.format(first_article.get('title'),first_article.get('published'), first_article.get('summary'))
+
+
+    articles = feed['entries']
+
+    return render_template('home.html', source=source, articles=articles)
+    # dynamic
+    # first_article = feed['entries'][0]
+    # return render_template('home.html', source=source, title=first_article.get('title'),
+    #                        published=first_article.get('published'),
+    #                        summary=first_article.get('summary'))
+
+    # static
+    # return """<html>
+    #   <body>
+    #     <h1>  Headlines </h1>
+    #     <b> {0} </b> <br/>
+    #     <i> {1} </i> <br/>
+    #     <p> {2} </p> <br/>
+    #   </body>
+    # </html>
+    # """.format(first_article.get('title'),first_article.get('published'), first_article.get('summary'))
 
 
 
