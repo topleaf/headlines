@@ -5,6 +5,10 @@
     <title>{{ source }} headlines</title>
 </head>
     <body>
+    <form>
+        <input type="text" name="source" placeholder="search source"/>
+        <input type="submit" value="Submit"/>
+    </form>
      <h1>  {{source}} Headlines </h1>
      {% for article in articles %}
      <b> <a href="{{article.link}}"> {{article.title}}</a> </b> <br/>
